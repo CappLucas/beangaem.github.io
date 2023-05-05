@@ -1,0 +1,911 @@
+
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>
+      Super Bean Gaem!
+    </title>
+    <style>
+      #allhtml{
+        
+        max-height:100%;
+      }
+      #canvas {
+        
+        
+        box-sizing: border-box;
+        border: 2px solid black;
+        
+      }
+
+
+      .button {
+        width: 10%;
+        height: 20px;
+        font: 10px Arial;
+        opacity: .5;
+
+      }
+
+      #dropdown {
+        background-color: #8899ff;
+        height:30px;
+        display:flex;
+        width:600px;
+        border: 2px solid black;
+        
+      }
+
+
+
+      #buttons {
+        position: relative;
+        bottom: 50px;
+        
+        
+
+      }
+
+      #howtoplay {
+
+        text-align: center;
+        
+        background-color: #8899ff;
+        color: black;
+        border-color: #8899ff;
+        flex:1;
+        
+      }
+
+
+
+      #credits {
+
+        text-align: center;
+        
+        background-color: #8899ff;
+        color: black;
+        border-color: #8899ff;
+        flex:1;
+
+
+      }
+
+      #footer {
+        color: grey;
+
+      }
+
+    </style>
+
+  </head>
+
+  <body id="body">
+
+
+
+<div id="allhtml">
+
+<div align="center">
+
+
+    <div id="dropdown" >
+      <select id="howtoplay">
+        <option>How To Play</option>
+        <option disabled="disabled">Collect beans to complete</option>
+        <option disabled="disabled">the level.  Avoid the red ball.</option>
+        <option disabled="disabled">Each bean collected increases</option>
+        <option disabled="disabled">your speed and adds charge to your</option>
+        <option disabled="disabled">powerup.  If the box at the bottom</option>
+        <option disabled="disabled">is filled your powerup is ready and</option>
+        <option disabled="disabled">you can press k to go invincible</option>
+        <option disabled="disabled">for a short duration</option>
+        <option disabled="disabled"></option>
+        <option disabled="disabled">Use WASD or arrow keys to move</option>
+          <option disabled="disabled">
+              and use arrow keys to select color.
+          </option>
+      </select>
+
+
+      <select id="credits">
+        <option>
+          Credits
+        </option>
+        <option disabled="disabled">
+          Head Programmer: Lucas Capp
+        </option>
+        <option disabled="disabled">
+          Occasional Color Chooser: Eli Jurica
+        </option>
+        <option disabled="disabled">
+          Bean Drawer: Eli Jurica
+        </option>
+        <option disabled="disabled">
+          Official Game Tester:  Kade Verwolf
+        </option>
+        <option disabled="disabled">
+          Official Annoyer:  Christian Oylear
+        </option>
+      </select>
+    </div>
+    </div>
+     <div align="center">
+     
+     
+    <canvas  id="canvas" width="600px" height="450px">
+      Your browser dose not support the HTML5 "canvas" tag.
+    </canvas>
+    </div>
+    <footer id="footer" align="center">
+      Copyright 2023
+    </footer>
+    </div>
+  </body>
+  <script>
+    window.onload = function() {
+      var bean = new Image
+      bean.src = "https://mail.google.com/mail/u/0?ui=2&ik=419ea075ef&attid=0.1&permmsgid=msg-a:r-99440702950663444&th=187a04b2a058ac97&view=att&disp=safe&realattid=f_lgpk60lg0"
+      let heart = new Image;
+      heart.src = "https://mail.google.com/mail/u/0?ui=2&ik=419ea075ef&attid=0.6&permmsgid=msg-a:r5431106819303681234&th=187ddf9f894a849f&view=fimg&fur=ip&sz=s0-l75-ft&attbid=ANGjdJ8jCDwLm6SFhQYBpkMUs3HNJhfYNPHtzuRNDg_PbZe3gTrmX-Le6O1U9esUn0v6YhHwK2vyOhhlmK0ZG8NQszh7YGq2xDyfaop_SqjGJTJNeNPs1PhAW5PbCxo&disp=emb&realattid=ii_lh6ob6kg5"
+      bean.onload = function() {
+      let pgcharindex = 0;
+        let startclick = 0,
+          highscore = 0,
+          killr = 30,
+          playr = 15,
+          speed = 220,
+          udir = 0,
+          ddir = 0,
+          ldir = 0,
+          rdir = 0,
+          rinc = 0,
+          score = 0,
+          player = "start",
+          timer = 0,
+          killtime = 2,
+          killydir = -1,
+          killxdir = -1,
+          lowtime = 0,
+          killrs = 5,
+          killspeed = 200,
+          powerif = "true",
+          poweryindex = 1,
+          speedinc = 50,
+          textdur = 0,
+          textif = "false",
+          rdec = 30,
+          charge = 0,
+          invisamode = "off",
+          invisadur = 0,
+          invisaif = "off",
+          beancount = 0,
+          beangoal = 4,
+          beancountpos = 140,
+          beangoalpos = 140,
+          level = 0,
+          levelpos = 145,
+          lives = 3,
+          liveif = 'off',
+          x = 3,
+          y = 1,
+          charindex = 0,
+          powerxindex = 1;
+        let ringxindex = 0;
+        let ringxpos = [120, 210, 300, 390, 480];
+
+        let chars = [51, 0, 255, 0, 255, 94, 180, 40, 170, 255, 250, 82, 255, 153, 51, 255, 0, 171]
+        
+
+        var canvas = document.getElementById("canvas");
+        var context = canvas.getContext("2d");
+
+
+        var killx = Math.floor(Math.random() * 600);
+        var killy = Math.floor(Math.random() * 400);
+
+        if (killx >= 265 && killy >= 165) {
+          killx = 100;
+          killy = 100;
+        }
+
+        var playx = 300;
+        var playy = 200;
+
+
+
+
+        //key down section
+        document.addEventListener('keydown', function(event) {
+          if (event.which === 65) {
+            ldir = 1;
+
+          }
+        })
+        document.addEventListener('keydown', function(event) {
+          if (event.which === 87) {
+            udir = 1;
+
+          }
+        })
+        document.addEventListener('keydown', function(event) {
+          if (event.which === 68) {
+            rdir = 1;
+
+          }
+        })
+        document.addEventListener('keydown', function(event) {
+          if (event.which === 83) {
+            ddir = 1;
+
+          }
+        })
+        // this is keyup section
+        document.addEventListener('keyup', function(event) {
+          if (event.which === 65) {
+            ldir = 0;
+
+          }
+        })
+        document.addEventListener('keyup', function(event) {
+          if (event.which === 87) {
+            udir = 0;
+
+          }
+        })
+        document.addEventListener('keyup', function(event) {
+          if (event.which === 68) {
+            rdir = 0;
+
+          }
+        })
+        document.addEventListener('keyup', function(event) {
+          if (event.which === 83) {
+            ddir = 0;
+
+          }
+        })
+        
+        //key down section for arrow keys
+        document.addEventListener('keydown', function(event) {
+          if (event.which === 37) {
+            ldir = 1;
+            if(ringxindex>0){
+						ringxindex-=1;
+            }
+          }
+         
+        })
+        document.addEventListener('keydown', function(event) {
+          if (event.which === 38) {
+            udir = 1;
+
+          }
+        })
+        document.addEventListener('keydown', function(event) {
+          if (event.which === 39) {
+            rdir = 1;
+            if(ringxindex<4)
+						ringxindex+=1;
+          }
+
+        })
+        document.addEventListener('keydown', function(event) {
+          if (event.which === 40) {
+            ddir = 1;
+
+          }
+        })
+        // this is keyup section for arrow keys
+        document.addEventListener('keyup', function(event) {
+          if (event.which === 37) {
+            ldir = 0;
+
+          }
+        })
+        document.addEventListener('keyup', function(event) {
+          if (event.which === 38) {
+            udir = 0;
+
+          }
+        })
+        document.addEventListener('keyup', function(event) {
+          if (event.which === 39) {
+            rdir = 0;
+
+          }
+        })
+        document.addEventListener('keyup', function(event) {
+          if (event.which === 40) {
+            ddir = 0;
+
+          }
+        })
+
+
+
+        //enter
+        document.addEventListener('keyup', function(event) {
+          if (event.which === 13) {
+            player = "alive";
+
+          }
+        })
+        //spacebar
+        document.addEventListener('keyup', function(event) {
+          if (event.which === 32) {
+            player = "alive";
+
+          }
+        })
+        //k key
+
+        document.addEventListener('keydown', function(event) {
+          if (event.which === 75 && charge >= 600 && invisamode == "off" && player == "alive") {
+            charge -= 600;
+            invisamode = "on";
+
+          }
+        })
+
+
+
+
+        var t = Date.now();
+        //oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+
+
+        let hitfix = speed / 20
+        //bean pos variable
+        let powerposx = 0;
+        let powerposy = 0;
+
+        function draw() {
+          //fps counter + timer + timepassed
+          var timepassed = (Date.now() - t) / 1000;
+          t = Date.now();
+          var fps = Math.round(1 / timepassed);
+          //bean pos array
+          let powerxpos = [500, 275, 25];
+          let powerypos = [55, 205, 355];
+
+
+
+          if (player == "dead2" && killr > 4) {
+            deadpage();
+            //resets variables
+            score = 0;
+            timepassed = 0;
+            timer = 0;
+            killspeed = 200;
+            speed = 220;
+            rdec = 30;
+            beancount = 0;
+
+          }
+          if (player == "alive" && killr > 5) {
+
+            if (liveif == "on") {
+              liveif = "off";
+              lives = 3;
+              level = 0;
+              beangoal = 4;
+            }
+            if (timer == 0) {
+              invisamode = "on";
+            }
+            timer += timepassed;
+
+            score += timepassed * 20;
+
+
+
+
+            killspeed = (timer * 10) + 200;
+            killr += timepassed;
+
+
+            //draws the right amount of hearts
+            context.clearRect(0, 0, 600, 450);
+            context.beginPath();
+
+            if (lives == 3) {
+              context.drawImage(heart, 150, 0, 50, 50);
+              context.drawImage(heart, 170, 0, 50, 50);
+              context.drawImage(heart, 190, 0, 50, 50);
+            }
+
+            if (lives == 2) {
+              context.drawImage(heart, 150, 0, 50, 50);
+              context.drawImage(heart, 170, 0, 50, 50);
+            }
+            if (lives == 1) {
+              context.drawImage(heart, 150, 0, 50, 50);
+            }
+
+            //draws fps
+            context.beginPath();
+            context.font = "15px Arial";
+            context.fillStyle = "black"
+            context.fillText("FPS:  " + fps, 10, 15);
+
+
+            //draws beancount and checks if beangoal is reached
+            context.beginPath();
+            context.fillStyle = "black";
+            context.moveTo(135, 20);
+            context.lineTo(155, 20);
+            context.lineWidth = "2"
+            context.stroke();
+            context.beginPath();
+            context.font = "15px Arial";
+
+            if (beancount < 10) {
+              beancountpos = 140
+            } else {
+              beancountpos = 137;
+            }
+            if (beangoal < 10) {
+              beangoalpos = 140;
+            } else {
+              beangoalpos = 137;
+            }
+            context.fillText(beancount, beancountpos, 15)
+            context.fillText(beangoal, beangoalpos, 35)
+            context.beginPath();
+            context.drawImage(bean, 100, 5, 30, 30);
+
+            //draws the grey boxes
+            context.beginPath();
+            context.rect(100, 100, 100, 100);
+            context.rect(0, 300, 200, 100);
+            context.rect(400, 100, 200, 100);
+            context.rect(300, 250, 150, 100);
+            context.rect(250, 0, 200, 50);
+            context.fillStyle = "gray";
+            context.fill();
+            context.lineWidth = "3";
+            context.stroke();
+
+
+
+
+            //draws the line to devide the game and the powerup box
+            context.beginPath();
+            context.rect(0, 400, 600, 50);
+            context.fillStyle = "#72e7b5";
+            context.fill();
+            context.lineWidth = "5";
+            context.stroke();
+
+
+
+
+            //bean position random generator
+            if (powerif == "true") {
+              powerposx = powerxpos[Math.round(Math.random() * 2)];
+              powerposy = powerypos[Math.round(Math.random() * 2)];
+
+
+              powerif = "false";
+              score += 100;
+              
+            }
+            //checks if bean is not inside a box
+            if (powerposx == 25 && powerposy == 355) {
+              powerposy = 210;
+            }
+
+            //powerpos hitbox and reset + smaller ball
+            if (playx - 15 <= powerposx + 30 && playx + 15 >= powerposx && playy - 15 <= powerposy + 30 && playy + 15 >= powerposy) {
+
+              powerif = "true";
+              textif = "true";
+              textdur = timer + 1;
+              timer -= .5;
+              beancount += 1;
+
+              charge += 100;
+            }
+            //displays +speed and - time
+            if (textdur >= timer) {
+              context.beginPath();
+              context.font = "20px Arial";
+              context.fillStyle = "black";
+
+              
+            }
+            //bean
+            context.beginPath();
+            context.fillStyle = "green"
+            context.drawImage(bean, powerposx, powerposy, 40, 40);
+            context.fill();
+            //kill ball
+            context.beginPath();
+            context.arc(killx, killy, killr, 0, Math.PI * 2);
+            context.fillStyle = "red";
+            context.fill();
+            //player invisamode
+            if (invisamode == "on") {
+              invisamode = "off";
+              invisadur += timer + 3;
+
+
+            }
+            if (invisadur >= timer) {
+              context.beginPath()
+              context.globalAlpha = ".5";
+              invisaif = "on";
+            }
+            if (invisadur < timer) {
+              invisadur = 0;
+            }
+            if (invisadur < timer) {
+              invisaif = "off"
+            }
+            //draws player
+
+            context.beginPath();
+            context.arc(playx, playy, 15, 0, 2 * Math.PI);
+            context.fillStyle = `rgb(${chars[charindex]},${chars[charindex+1]},${chars[charindex+2]})`
+            context.fill();
+            context.globalAlpha = "1";
+            //draws the charge for the powerup meter
+            context.beginPath();
+            context.rect(0, 400, charge, 50);
+            context.fillStyle = "purple";
+            context.fill();
+
+            //makes ball bounce across the sides
+            killy += (killspeed * timepassed * killydir);
+            if (killy >= 397) {
+              killydir = -1;
+            }
+            if (killy <= 3) {
+              killydir = 1;
+            }
+            killx += (killspeed * timepassed * killxdir);
+
+            if (killx >= 597) {
+              killxdir = -1;
+            }
+            if (killx <= 3) {
+              killxdir = 1;
+            }
+
+
+
+
+
+
+            hitfix = speed / 40;
+            //hitbox check for ball hitting walls and hitting the killball
+            if (udir == 1) {
+              playy -= (speed * timepassed);
+              if (playy <= 10 || playy >= 90 && playy <= 210 && playx <= 210 && playx >= 90 || playy >= 90 && playy <= 210 && playx > 410 || playx >= 240 && playx <= 460 && playy <= 60 || playy >= 240 && playy <= 360 && playx >= 290 && playx <= 460) {
+                playy += (speed * timepassed);
+              }
+              if (playy <= killy + killr && playy >= killy - killr && playx <= killx + killr && playx >= killx - killr) {
+                player = "dead2"
+                lives -= 1;
+
+              }
+
+            } else if (ddir == 1) {
+              playy += (speed * timepassed);
+              if (playy >= 390 || playy >= 90 && playy <= 210 && playx <= 210 && playx >= 90 || playy >= 90 && playy <= 210 && playx >= 410 || /*top middle box*/ playx >= 240 && playx <= 460 && playy <= 60 || /* middle right box*/ playy >= 240 && playy <= 360 && playx >= 290 && playx <= 460 || /*bottom left box*/ playx <= 210 && playy > 290) {
+                playy -= (speed * timepassed);
+              }
+              if (playy <= killy + killr && playy >= killy - killr && playx <= killx + killr && playx >= killx - killr && invisaif == "off") {
+                player = "dead2"
+                lives -= 1;
+
+              }
+            } else if (ldir == 1) {
+              playx -= (speed * timepassed);
+              if (playx <= 10 || playy >= 90 && playy <= 210 && playx <= 210 && playx >= 90 || playy >= 90 && playy <= 210 && playx > 410 || playx >= 240 && playx <= 460 && playy <= 60 || playy >= 240 && playy <= 360 && playx >= 290 && playx <= 460 || playx <= 210 && playy > 290) {
+                playx += (speed * timepassed);
+              }
+              if (playy <= killy + killr && playy >= killy - killr && playx <= killx + killr && playx >= killx - killr && invisaif == "off") {
+                player = "dead2";
+                lives -= 1;
+
+              }
+            } else if (rdir == 1) {
+              playx += (speed * timepassed);
+              if (playx >= 590 || playy >= 90 && playy <= 210 && playx <= 210 && playx >= 90 || playy >= 90 && playy <= 210 && playx >= 390 || playx >= 240 && playx <= 460 && playy <= 60 || playy >= 240 && playy <= 360 && playx >= 290 && playx <= 410 || playx <= 210 && playy > 290) {
+                playx -= (speed * timepassed);
+              }
+              if (playy <= killy + killr && playy >= killy - killr && playx <= killx + killr && playx >= killx - killr && invisaif == "off") {
+                player = "dead2"
+                lives -= 1;
+
+              }
+
+            } else {
+              if (playy <= killy + killr && playy >= killy - killr && playx <= killx + killr && playx >= killx - killr && invisaif == "off") {
+                player = "dead2";
+                lives -= 1;
+              }
+              //unnecessary part that I didnt feel like deleting
+            }
+            if (highscore < score) {
+              highscore = score;
+            }
+
+          }
+
+
+          //draws potentially draws winpage
+          startpage();
+          winpage();
+          //gets fps
+          requestAnimationFrame(draw);
+
+        }
+        //winpage function
+        function winpage() {
+          if (beancount == beangoal) {
+
+            timer = 0;
+            speed = 220;
+            player = "won";
+            powerif = "true";
+            playx = 300;
+            playy = 200;
+            textdur = 0;
+            killr = 30;
+            killspeed = 300;
+            charge = 0;
+            invisamode = "off";
+            invisadur = 0;
+            beancount = 0;
+            beangoal += 2;
+            level += 1;
+
+            context.clearRect(0, 0, 600, 450);
+            context.beginPath();
+            context.rect(0, 0, 600, 450);
+            context.fillStyle = "#102542";
+            context.fill();
+
+            context.beginPath();
+            context.rect(100, 100, 400, 200);
+            context.fillStyle = "rgb(192,207,223)";
+            context.fill();
+
+
+            context.beginPath();
+            context.font = "40px Arial";
+            context.fillStyle = "black";
+            if (level > 9) {
+              levelpos = 132;
+            }
+
+            context.fillText("Level " + level + " Complete", levelpos, 200);
+            context.beginPath();
+            context.font = "20px Arial";
+            context.fillText("Press Enter to Start", 215, 230);
+            context.beginPath();
+						          
+          }
+        }
+        //startpage function
+        function startpage() {
+					if(player=="start"){
+          speed = 220;
+          
+          context.clearRect(0, 0, 600, 400);
+          context.beginPath();
+          context.rect(0, 0, 600, 450);
+          context.fillStyle = "#102542";
+          context.fill();
+
+          context.beginPath();
+          context.rect(100, 100, 400, 200);
+          context.fillStyle = "rgb(192,207,223)";
+          context.fill();
+
+
+          context.beginPath();
+          context.font = "50px Arial";
+          context.fillStyle = "black";
+          context.fillText("Start Game", 175, 200);
+          context.beginPath();
+          context.font = "20px Arial";
+          context.fillText("Press Enter to Start", 215, 240);
+
+          
+          context.beginPath();
+          context.arc(120, 285, 25, 0, Math.PI * 2)
+          pgcharindex = 0;
+          context.fillStyle = `rgb(${chars[pgcharindex]},${chars[pgcharindex+1]},${chars[pgcharindex+2]})`
+          context.fill()
+          context.beginPath();
+          context.arc(210, 285, 25, 0, Math.PI * 2)
+          pgcharindex = 3;
+          context.fillStyle = `rgb(${chars[pgcharindex]},${chars[pgcharindex+1]},${chars[pgcharindex+2]})`
+          context.fill()
+          context.beginPath();
+          context.arc(300, 285, 25, 0, Math.PI * 2)
+          pgcharindex = 6;
+          context.fillStyle = `rgb(${chars[pgcharindex]},${chars[pgcharindex+1]},${chars[pgcharindex+2]})`
+          context.fill()
+          context.beginPath();
+          context.arc(390, 285, 25, 0, Math.PI * 2)
+          pgcharindex = 9;
+          context.fillStyle = `rgb(${chars[pgcharindex]},${chars[pgcharindex+1]},${chars[pgcharindex+2]})`
+          context.fill()
+          context.beginPath();
+          context.arc(480, 285, 25, 0, Math.PI * 2)
+          pgcharindex = 12;
+          context.fillStyle = `rgb(${chars[pgcharindex]},${chars[pgcharindex+1]},${chars[pgcharindex+2]})`
+          context.fill()
+          context.beginPath();
+          
+          if (ringxindex == 0) {
+            charindex=0;
+            context.arc(120, 285, 25, 0, Math.PI * 2);
+            context.strokeStyle = "black";
+            context.lineWidth = "5";
+            context.stroke();
+          }
+          if (ringxindex == 1) {
+          charindex=3;
+            context.arc(210, 285, 25, 0, Math.PI * 2);
+            context.strokeStyle = "black";
+            context.lineWidth = "5";
+            context.stroke();
+          }
+          if (ringxindex == 2) {
+          charindex=6;
+            context.arc(300, 285, 25, 0, Math.PI * 2);
+            context.strokeStyle = "black";
+            context.lineWidth = "5";
+            context.stroke();
+          }
+          if (ringxindex == 3) {
+          charindex=9;
+            context.arc(390, 285, 25, 0, Math.PI * 2);
+            context.strokeStyle = "black";
+            context.lineWidth = "5";
+            context.stroke();
+          }
+          if (ringxindex == 4) {
+          charindex=12;
+            context.arc(480, 285, 25, 0, Math.PI * 2);
+            context.strokeStyle = "black";
+            context.lineWidth = "5";
+            context.stroke();
+          }
+				}
+        }
+        //deadpage function
+        function deadpage() {
+          if (player == "dead2") {
+            //  resets player and killcircle cooridnates
+
+
+
+
+
+            powerif = "true";
+            playx = 300;
+            playy = 200;
+            textdur = 0;
+            killr = 30;
+            killspeed = 200;
+            charge = 0;
+            invisamode = "off";
+            invisadur = 0;
+
+            killx = Math.floor(Math.random() * 600);
+            killx = Math.floor(Math.random() * 400);
+            //draws the deadpage
+            //draws the backround
+            context.clearRect(0, 0, 600, 450);
+            context.beginPath();
+            context.rect(0, 0, 600, 450);
+            context.fillStyle = "#102542";
+            context.fill();
+            //draws the middle square 
+            context.beginPath();
+            context.rect(100, 100, 400, 200);
+            context.fillStyle = "rgb(192,207,223)";
+            context.fill();
+
+
+            context.beginPath();
+            context.fillStyle = "black"
+            context.font = "40px Arial"
+            context.fillText("Game Over", 200, 200);
+            context.font = "20px Arial"
+            context.fillText("Press Enter to Start", 215, 230);
+
+						          context.beginPath();
+          context.arc(120, 285, 25, 0, Math.PI * 2)
+          pgcharindex = 0;
+          context.fillStyle = `rgb(${chars[pgcharindex]},${chars[pgcharindex+1]},${chars[pgcharindex+2]})`
+          context.fill()
+          context.beginPath();
+          context.arc(210, 285, 25, 0, Math.PI * 2)
+          pgcharindex = 3;
+          context.fillStyle = `rgb(${chars[pgcharindex]},${chars[pgcharindex+1]},${chars[pgcharindex+2]})`
+          context.fill()
+          context.beginPath();
+          context.arc(300, 285, 25, 0, Math.PI * 2)
+          pgcharindex = 6;
+          context.fillStyle = `rgb(${chars[pgcharindex]},${chars[pgcharindex+1]},${chars[pgcharindex+2]})`
+          context.fill()
+          context.beginPath();
+          context.arc(390, 285, 25, 0, Math.PI * 2)
+          pgcharindex = 9;
+          context.fillStyle = `rgb(${chars[pgcharindex]},${chars[pgcharindex+1]},${chars[pgcharindex+2]})`
+          context.fill()
+          context.beginPath();
+          context.arc(480, 285, 25, 0, Math.PI * 2)
+          pgcharindex = 12;
+          context.fillStyle = `rgb(${chars[pgcharindex]},${chars[pgcharindex+1]},${chars[pgcharindex+2]})`
+          context.fill()
+          context.beginPath();
+          
+          if (ringxindex == 0) {
+            charindex=0;
+            context.arc(120, 285, 25, 0, Math.PI * 2);
+            context.strokeStyle = "black";
+            context.lineWidth = "5";
+            context.stroke();
+          }
+          if (ringxindex == 1) {
+          charindex=3;
+            context.arc(210, 285, 25, 0, Math.PI * 2);
+            context.strokeStyle = "black";
+            context.lineWidth = "5";
+            context.stroke();
+          }
+          if (ringxindex == 2) {
+          charindex=6;
+            context.arc(300, 285, 25, 0, Math.PI * 2);
+            context.strokeStyle = "black";
+            context.lineWidth = "5";
+            context.stroke();
+          }
+          if (ringxindex == 3) {
+          charindex=9;
+            context.arc(390, 285, 25, 0, Math.PI * 2);
+            context.strokeStyle = "black";
+            context.lineWidth = "5";
+            context.stroke();
+          }
+          if (ringxindex == 4) {
+          charindex=12;
+            context.arc(480, 285, 25, 0, Math.PI * 2);
+            context.strokeStyle = "black";
+            context.lineWidth = "5";
+            context.stroke();
+          }
+            if (lives == 0) {
+              context.font = "30px Arial";
+              context.fillStyle="red";
+              context.fillText("Out of Lives!  level reset!", 130, 125)
+
+
+
+
+              liveif = "on";
+            }
+
+            //checks for click on canvas and starts game if it sences
+          }
+        }
+
+
+        startpage();
+        draw();
+      }
+    }
+  </script>
+  
+</html>
+
